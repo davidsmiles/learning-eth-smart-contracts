@@ -15,6 +15,12 @@ contract = web3.eth.contract(address=address, abi=abi)
 
 print(contract.functions.greet().call())
 
-tx_hash = contract.functions.setGreeting('HELLLOOOOOOOOOO').transact()
+tx_hash = contract.functions.setGreeting('DAVID IS A GREAT GUY').transact()
 
-print(contract.functions.greet().call())
+# Wait for transaction to be mined
+web3.eth.waitForTransactionReceipt(tx_hash)
+
+# Display the new greeting value
+print('Updated contract greeting: {}'.format(
+    contract.functions.greet().call()
+))
