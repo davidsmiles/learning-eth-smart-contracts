@@ -13,13 +13,22 @@ bytecode = "608060405234801561001057600080fd5b5060408051908101604052806005815260
 
 Greeter = web3.eth.contract(abi=abi, bytecode=bytecode)
 
+# deploy
 tx_hash = Greeter.constructor().transact()
 
-tx_receipt = web3.eth.waitForTransactionReceipt(tx_hash)
+tx_receipt = web3.eth.getTransactionReceipt(tx_hash)
 # print(tx_receipt)
 
-contract = web3.eth.contract(
+contract1 = web3.eth.contract(
     address=tx_receipt.contractAddress,
     abi=abi
 )
-print(contract.functions.greet().call())
+print(f'from contract1 {contract1.functions.greet().call()}')
+contract1.functions.setGreeting('hello world').transact()
+print(f'from contract1 {contract1.functions.greet().call()}')
+
+contract2 = web3.eth.contract(
+    address=tx_receipt.contractAddress,
+    abi=abi
+)
+print(f'from contract2 {contract2.functions.greet().call()}')
