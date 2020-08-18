@@ -11,7 +11,8 @@ taskCount: public(int128)
 @external
 def createTask(_content: String[100]):
     assert len(_content) != 0
-    self.tasks[self.taskCount] = Task({id: self.taskCount, content: _content, completed: False})
+    self.tasks[self.taskCount] = Task(
+        {id: self.taskCount, content: _content, completed: False})
     self.taskCount += 1
 
 
