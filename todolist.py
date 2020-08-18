@@ -8,10 +8,25 @@ w3 = Web3(Web3.HTTPProvider(ganache_url))
 w3.eth.defaultAccount = w3.eth.accounts[1]
 
 
-# instantiate the contract
-abi = json.loads('[{"constant":false,"inputs":[{"name":"content","type":"string"}],"name":"createTask","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[{"name":"","type":"uint256"}],"name":"tasks","outputs":[{"name":"id","type":"uint256"},{"name":"content","type":"string"},{"name":"completed","type":"bool"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"taskCount","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"inputs":[],"payable":false,"stateMutability":"nonpayable","type":"constructor"}]')
-address = w3.toChecksumAddress('0x0f3111eb9fB7e5D9bDeccC3AB7E0e71a212339B0')
-contract = w3.eth.contract(address=address, abi=abi)
+# Deploy Contract
+abi = json.loads('[{"name": "createTask", "outputs": [], "inputs": [{"type": "string", "name": "_content"}], "stateMutability": "payable", "type": "function", "gas": 284231}, {"name": "taskCount", "outputs": [{"type": "int128", "name": ""}], "inputs": [], "stateMutability": "view", "type": "function", "gas": 1181}, {"name": "tasks", "outputs": [{"type": "int128", "name": "id"}, {"type": "string", "name": "content"}, {"type": "bool", "name": "completed"}], "inputs": [{"type": "int128", "name": "arg0"}], "stateMutability": "view", "type": "function", "gas": 12223}]')
+bytecode = '0x61030a56600436101561000d57610300565b600035601c52740100000000000000000000000000000000000000006020526f7fffffffffffffffffffffffffffffff6040527fffffffffffffffffffffffffffffffff8000000000000000000000000000000060605274012a05f1fffffffffffffffffffffffffdabf41c006080527ffffffffffffffffffffffffed5fa0e000000000000000000000000000000000060a05263111002aa60005114156101825760846004356004016101403760646004356004013511156100cf57600080fd5b6000546001606051818301806040519013156100ea57600080fd5b80919012156100f857600080fd5b90509050600055600160005460e05260c052604060c02060c052602060c0206000548155610140806001830160c052602060c020602082510161012060006005818352015b8261012051602002111561015057610172565b61012051602002850151610120518501555b815160010180835281141561013d575b5050505050506001600282015550005b63b6cb58a560005114156101a957341561019b57600080fd5b60005460005260206000f350005b63c20ac1f560005114156102ff5734156101c257600080fd5b606051600435806040519013156101d857600080fd5b80919012156101e657600080fd5b506101408060608180600160043560e05260c052604060c02060c052602060c0205481525050602082019150808252808301806001600160043560e05260c052604060c02060c052602060c020018060c052602060c02082602082540161012060006005818352015b8261012051602002111561026257610284565b61012051850154610120516020028501525b815160010180835281141561024f575b5050505050508051806020830101818260206001820306601f8201039050033682375050805160200160206001820306601f8201039050905090508101905060208201915081806002600160043560e05260c052604060c02060c052602060c0200154815250508090509050905060c05260c051610140f350005b5b60006000fd5b61000461030a0361000460003961000461030a036000f3'
+compiled_contract = w3.eth.contract(abi=abi, bytecode=bytecode)
+
+# deploy
+tx_hash = compiled_contract.constructor().transact()
+
+# get receipt of transaction
+tx_receipt = w3.eth.getTransactionReceipt(tx_hash)
+
+# Get the Contract
+contract = w3.eth.contract(abi=abi, address=tx_receipt.contractAddress)
+
+# Add some task
+contract.functions.createTask('Learn blockchain').transact()
+contract.functions.createTask('Learn solidity').transact()
+contract.functions.createTask('Learn vyper').transact()
+contract.functions.createTask('Learn smart contracts').transact()
 
 
 # call some functions
@@ -19,6 +34,3 @@ for i in range(1, contract.functions.taskCount().call() + 1):
     tasks = contract.functions.tasks(i).call()
     print(f'{i} {tasks}')
 
-
-# add a task
-# contract.functions.createTask('Learn blockchain too').transact()
