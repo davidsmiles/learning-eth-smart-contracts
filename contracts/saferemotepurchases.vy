@@ -1,3 +1,5 @@
+# Safe Remote Purchase Contract
+
 value: public(uint256)
 seller: public(address)
 buyer: public(address)
@@ -34,14 +36,14 @@ def abort():
 def purchase():
     assert msg.sender != self.seller
     assert self.unlocked, 'item is still up for sale!'
-    assert self.value == msg.value * 2
+    assert msg.value == self.value * 2
 
     self.buyer = msg.sender
     self.unlocked = False
 
 
 # Buyer confirms receiving the item, buyer's deposit is returned (value)
-# Seller's deposit (2 * value) + items value is returned.
+# Seller's deposit (2 * value) + item's value is returned.
 @external
 def received():
     # Conditions
