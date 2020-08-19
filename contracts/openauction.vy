@@ -11,7 +11,7 @@ highestBid: public(uint256)
 
 
 # Set to True at the end
-ended: bool
+ended: public(bool)
 
 # Keeps track of refunded bids
 pendingReturns: public(HashMap[address, uint256])
@@ -32,7 +32,7 @@ def __init__(_beneficiary: address, biddingtime: uint256):
 @external
 def bid():
     # Check if bidding period is over
-    assert block.timestamp < self.auctionStart, 'bidding time expired'
+    assert block.timestamp < self.auctionEnd, 'bidding time expired'
 
     # Check if bid is high enough
     assert msg.value >= self.highestBid, 'bid is lower than the current highest bid'
@@ -58,12 +58,12 @@ def withdraw():
 @external
 def endAuction():
     # Check if auction endtime has been reached
-    assert block.timestamp >= self.auctionEnd
+    assert block.timestamp >= self.auctionEnd, 'bidding time still active'
 
     # Check if this function has been called already
     assert not self.ended
 
     self.ended = True
 
-    # Send highest big to beneficiary
-    send(msg.sender, self.highestBid)
+    # Send highest bid to beneficiary
+    send(self.beneficiary, self.highestBid)
