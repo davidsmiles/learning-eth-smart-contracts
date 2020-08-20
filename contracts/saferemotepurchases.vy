@@ -20,8 +20,8 @@ def __init__():
     self.unlocked = True
 
 
-# Only a seller can refund his deposit before any buyer refunds 
-# his deposit
+# Only a seller can refund his deposit before any buyer  makes
+# a purchase
 @external
 def abort():
     assert self.unlocked, 'buyer already made purchase'
