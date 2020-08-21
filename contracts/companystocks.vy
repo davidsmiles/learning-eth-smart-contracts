@@ -13,6 +13,7 @@ company: public(address)
 price: public(uint256)
 totalStocks: public(uint256)
 
+# Store a ledger of stockholder holdings
 holdings: public(HashMap[address, uint256])
 
 
