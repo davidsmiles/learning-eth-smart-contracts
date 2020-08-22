@@ -50,8 +50,13 @@ def delete(id: int128):
     for i in range(ind, ind + 10):
         if i < id:
             continue
+
+        if i >= self.taskCount:
+            self.deleteIndex = self.taskCount
+            return
         
         self.tasks[i] = self.tasks[i + 1] 
         self.tasks[i].id -= 1
 
+    self.deleteIndex = ind + 10
     self.taskCount -= 1
