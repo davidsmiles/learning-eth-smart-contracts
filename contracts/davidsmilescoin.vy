@@ -1,3 +1,14 @@
+"""
+@title DavidSmilesCoin
+@author David Smiles
+@license No License
+@notice 
+    A Cryptocurrency with the name 'DavidSmilesCoin' and a currency symbol of 'DSC'
+@dev
+    Smart Contract written in Vyper to set up the functions for the DSC cryptocurrency
+"""
+
+
 event Transfer:
     sender: indexed(address)
     receiver: indexed(address)
