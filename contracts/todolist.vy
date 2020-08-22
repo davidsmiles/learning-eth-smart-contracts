@@ -44,14 +44,14 @@ def update(id: int128, content: String[100]):
 @external
 def delete(id: int128):
     assert id < self.taskCount
-
-    # PROCESS this logic some other time
-    # ind: int128 = self.deleteIndex
-    # for i in range(ind, ind + 10):
-    #     if i < id:
-    #         continue
-        
-    #     self.tasks[i + 1].id = id - 1
-
     self.tasks[id] = empty(Task)
+
+    ind: int128 = self.deleteIndex
+    for i in range(ind, ind + 10):
+        if i < id:
+            continue
+        
+        self.tasks[i] = self.tasks[i + 1] 
+        self.tasks[i].id -= 1
+
     self.taskCount -= 1
