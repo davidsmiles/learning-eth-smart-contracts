@@ -6,7 +6,6 @@ struct Task:
 
 tasks: public(Task[100])
 taskCount: public(int128)
-deleteIndex: public(int128)
 
 
 @internal
@@ -43,20 +42,20 @@ def update(id: int128, content: String[100]):
 
 @external
 def delete(id: int128):
-    assert id < self.taskCount
-    self.tasks[id] = empty(Task)
+    assert id <= self.taskCount
 
-    ind: int128 = self.deleteIndex
-    for i in range(ind, ind + 10):
-        if i < id:
-            continue
+    unit: int128 = id / 10
+    ind: int128 = unit * 10
 
-        if i >= self.taskCount:
-            self.deleteIndex = self.taskCount
-            return
+    if id >= ind and id < ind + 10:
+        self.tasks[id] = empty(Task)
         
-        self.tasks[i] = self.tasks[i + 1] 
-        self.tasks[i].id -= 1
-
-    self.deleteIndex = ind + 10
-    self.taskCount -= 1
+        for i in range(ind, ind + 10):
+            if i < id:
+                continue
+            
+            self.tasks[i] = self.tasks[i + 1] 
+            self.tasks[i].id -= 1
+        
+        self.taskCount -= 1
+        
