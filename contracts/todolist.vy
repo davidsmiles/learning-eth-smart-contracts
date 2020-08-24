@@ -44,18 +44,15 @@ def update(id: int128, content: String[100]):
 def delete(id: int128):
     assert id <= self.taskCount
 
-    unit: int128 = id / 10
-    ind: int128 = unit * 10
+    ind: int128 = (id / 10) * 10
 
-    if id >= ind and id < ind + 10:
-        self.tasks[id] = empty(Task)
+    self.tasks[id] = empty(Task)
         
-        for i in range(ind, ind + 10):
-            if i < id:
-                continue
-            
-            self.tasks[i] = self.tasks[i + 1] 
-            self.tasks[i].id -= 1
+    for i in range(ind, ind + 10):
+        if i < id:
+            continue
         
-        self.taskCount -= 1
-        
+        self.tasks[i] = self.tasks[i + 1] 
+        self.tasks[i].id -= 1
+    
+    self.taskCount -= 1
